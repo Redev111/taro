@@ -221,7 +221,7 @@ async function makeTarotReading(question, cardCount) {
               Пользователь задал вопрос: "${question}".
               У него есть дополнительная информация:
               ${context}
-              В ответе верни ТОЛЬКО JSON в формате:
+              "В ответе верни ТОЛЬКО JSON в формате: { ... } без кодировок, обёрток, комментариев или других символов. Никаких ```json, никаких #, никаких объяснений."
               {
                 "cards": ["название1", "название2", ...],
                 "interpretation": "краткое обобщение",
@@ -283,7 +283,7 @@ async function makeTarotReading(question, cardCount) {
 
       const div = document.createElement('div');
       div.className = 'card';
-      div.style.backgroundImage = `url(assets/cards/${englishFileName}.jpg)`;
+      div.style.backgroundImage = `url(taro/assets/cards/${englishFileName}.jpg)`;
       div.title = cardName;
 
       // Подпись под картой

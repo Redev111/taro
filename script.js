@@ -1,8 +1,6 @@
-// Твой ключ DeepSeek
 const DEEPSEEK_API_KEY = "sk-8c8051f46dd84677b6f008887eadbf54";
 const API_URL = "https://api.deepseek.com/v1/chat/completions";
 
-// Словарь: русское название → имя файла на английском
 const russianToEnglishCardMap = {
   "Маг": "the-magician",
   "Жрица": "the-high-priestess",
@@ -25,8 +23,6 @@ const russianToEnglishCardMap = {
   "Солнце": "the-sun",
   "Суд": "judgement",
   "Мир": "the-world",
-
-  // Минорные арканы — Жезлы
   "Туз жезлов": "ace-of-wands",
   "Двойка жезлов": "two-of-wands",
   "Тройка жезлов": "three-of-wands",
@@ -37,8 +33,6 @@ const russianToEnglishCardMap = {
   "Восьмёрка жезлов": "eight-of-wands",
   "Девятка жезлов": "nine-of-wands",
   "Десятка жезлов": "ten-of-wands",
-
-  // Минорные арканы — Кубки
   "Туз кубков": "ace-of-cups",
   "Двойка кубков": "two-of-cups",
   "Тройка кубков": "three-of-cups",
@@ -49,8 +43,6 @@ const russianToEnglishCardMap = {
   "Восьмёрка кубков": "eight-of-cups",
   "Девятка кубков": "nine-of-cups",
   "Десятка кубков": "ten-of-cups",
-
-  // Минорные арканы — Мечи
   "Туз мечей": "ace-of-swords",
   "Двойка мечей": "two-of-swords",
   "Тройка мечей": "three-of-swords",
@@ -61,8 +53,6 @@ const russianToEnglishCardMap = {
   "Восьмёрка мечей": "eight-of-swords",
   "Девятка мечей": "nine-of-swords",
   "Десятка мечей": "ten-of-swords",
-
-  // Минорные арканы — Пентакли
   "Туз пентаклей": "ace-of-pentacles",
   "Двойка пентаклей": "two-of-pentacles",
   "Тройка пентаклей": "three-of-pentacles",
@@ -73,33 +63,24 @@ const russianToEnglishCardMap = {
   "Восьмёрка пентаклей": "eight-of-pentacles",
   "Девятка пентаклей": "nine-of-pentacles",
   "Десятка пентаклей": "ten-of-pentacles",
-
-  // Фигурные карты — Жезлы
   "Паж жезлов": "page-of-wands",
   "Рыцарь жезлов": "knight-of-wands",
   "Королева жезлов": "queen-of-wands",
   "Король жезлов": "king-of-wands",
-
-  // Фигурные карты — Кубки
   "Паж кубков": "page-of-cups",
   "Рыцарь кубков": "knight-of-cups",
   "Королева кубков": "queen-of-cups",
   "Король кубков": "king-of-cups",
-
-  // Фигурные карты — Мечи
   "Паж мечей": "page-of-swords",
   "Рыцарь мечей": "knight-of-swords",
   "Королева мечей": "queen-of-swords",
   "Король мечей": "king-of-swords",
-
-  // Фигурные карты — Пентакли
   "Паж пентаклей": "page-of-pentacles",
   "Рыцарь пентаклей": "knight-of-pentacles",
   "Королева пентаклей": "queen-of-pentacles",
   "Король пентаклей": "king-of-pentacles"
 };
 
-// Получаем элементы
 const questionInput = document.getElementById('question');
 const resultDiv = document.getElementById('result');
 const cardsContainer = document.getElementById('cards');
@@ -113,7 +94,6 @@ const shortDrawBtn = document.getElementById('short-draw');
 const fullDrawBtn = document.getElementById('full-draw');
 const voiceBtn = document.getElementById('voice-input');
 
-// Очистка поля
 if (clearBtn) {
   clearBtn.addEventListener('click', () => {
     questionInput.value = '';
@@ -122,7 +102,6 @@ if (clearBtn) {
   });
 }
 
-// Краткий расклад (3 карты)
 if (shortDrawBtn) {
   shortDrawBtn.addEventListener('click', () => {
     const question = questionInput.value.trim();
@@ -131,7 +110,6 @@ if (shortDrawBtn) {
   });
 }
 
-// Полный расклад (5 карт)
 if (fullDrawBtn) {
   fullDrawBtn.addEventListener('click', () => {
     const question = questionInput.value.trim();
@@ -140,7 +118,6 @@ if (fullDrawBtn) {
   });
 }
 
-// Голосовой ввод
 if (voiceBtn) {
   let isListening = false;
 
@@ -221,7 +198,8 @@ async function makeTarotReading(question, cardCount) {
               Пользователь задал вопрос: "${question}".
               У него есть дополнительная информация:
               ${context}
-              "В ответе верни ТОЛЬКО JSON в формате: { ... } без кодировок, обёрток, комментариев или других символов. Никаких ```json, никаких #, никаких объяснений."
+              В ответе верни ТОЛЬКО JSON в формате: { ... } без кодировок, обёрток, комментариев или других символов. Никаких \`\`\`json, никаких #, никаких объяснений.
+              Формат:
               {
                 "cards": ["название1", "название2", ...],
                 "interpretation": "краткое обобщение",
@@ -272,7 +250,6 @@ async function makeTarotReading(question, cardCount) {
       throw new Error("Некорректный формат: нет массива карт.");
     }
 
-    // Показываем карты
     cardsContainer.innerHTML = '';
     result.cards.forEach(cardName => {
       const englishFileName = russianToEnglishCardMap[cardName] || cardName.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -283,10 +260,9 @@ async function makeTarotReading(question, cardCount) {
 
       const div = document.createElement('div');
       div.className = 'card';
-      div.style.backgroundImage = `url(taro/assets/cards/${englishFileName}.jpg)`;
+      div.style.backgroundImage = `url(assets/cards/${englishFileName}.jpg)`;
       div.title = cardName;
 
-      // Подпись под картой
       const nameDiv = document.createElement('div');
       nameDiv.className = 'card-name';
       nameDiv.innerText = cardName;
@@ -295,10 +271,8 @@ async function makeTarotReading(question, cardCount) {
       cardsContainer.appendChild(div);
     });
 
-    // Показываем интерпретацию
     interpretationEl.innerHTML = `<p><strong>🔮 Общее толкование:</strong></p><p>${result.interpretation}</p>`;
     
-    // Добавляем детализированное описание
     if (result.detailed) {
       const detailedDiv = document.createElement('div');
       detailedDiv.innerHTML = '<h3 style="margin-top: 25px; color: #e0d0ff; text-shadow: 0 0 5px #8e44ad;">📖 Подробное толкование карт:</h3>';
@@ -315,7 +289,6 @@ async function makeTarotReading(question, cardCount) {
       interpretationEl.appendChild(detailedDiv);
     }
 
-    // Добавляем общий вывод
     if (result.overall) {
       const overallDiv = document.createElement('div');
       overallDiv.innerHTML = `
@@ -327,7 +300,6 @@ async function makeTarotReading(question, cardCount) {
       `;
       interpretationEl.appendChild(overallDiv);
 
-      // Добавляем обработчик для кнопки "Поделиться"
       document.getElementById('share-btn').addEventListener('click', () => {
         const shareText = `
 🔮 Мой расклад Таро:
